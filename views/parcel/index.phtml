@@ -87,7 +87,11 @@ $pageLinks = buildPages($page, $pages);
                 <tr>
                     <td><?= htmlspecialchars($p['name']) ?></td>
                     <td><?= htmlspecialchars($addr) ?></td>
-                    <td><?= $counts[$p['id']] ?? 0 ?></td>
+                    <td>
+                        <button class="blocks-btn" data-id="<?= $p['id'] ?>">
+                            <?= $counts[$p['id']] ?? 0 ?>
+                        </button>
+                    </td>
                     <td><?= htmlspecialchars($p['status']) ?></td>
                     <td><?= date('Y-m-d', strtotime($p['created_at'])) ?></td>
                     <td>
@@ -138,3 +142,17 @@ $pageLinks = buildPages($page, $pages);
         });
     });
 </script>
+
+<link rel="stylesheet" href="/public/css/blocks-modal.css">
+<div id="blocksModal">
+  <div class="modal-card">
+    <button class="close">×</button>
+    <h3 class="modal-title"></h3>
+    <div class="modal-body"></div>
+    <div class="modal-footer">
+      <a class="btn full-link" href="#" target="_blank">Blocks list</a>
+      <button class="btn close">Close</button>
+    </div>
+  </div>
+</div>
+<script src="/public/js/blocks-modal.js"></script>
