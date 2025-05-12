@@ -1,125 +1,140 @@
-
 <?php
-function buildUrlPg($target){
+function buildUrlPg($target)
+{
     return '?' . http_build_query([
-        'q'=>'parcel/index',
-        'page'=>$target,
-        'limit'=>$GLOBALS['perPage'],
-        'sort'=>$GLOBALS['sort'],
-        'dir'=>strtolower($GLOBALS['dir']),
-        'f_name'=>$GLOBALS['nameFilter'],
-        'f_address'=>$GLOBALS['addrFilter']
+        'q' => 'parcel/index',
+        'page' => $target,
+        'limit' => $GLOBALS['perPage'],
+        'sort' => $GLOBALS['sort'],
+        'dir' => strtolower($GLOBALS['dir']),
+        'f_name' => $GLOBALS['nameFilter'],
+        'f_address' => $GLOBALS['addrFilter']
     ]);
 }
-function buildPages($curr,$pages){
-    $a=[1,$pages,$curr-2,$curr-1,$curr,$curr+1,$curr+2];
-    $a=array_filter($a,fn($p)=>$p>=1&&$p<=$pages);
-    $a=array_unique($a); sort($a);
-    $out=[];$prev=0;
-    foreach($a as $p){ if($prev&&$p-$prev>1)$out[]='…'; $out[]=$p; $prev=$p; }
+function buildPages($curr, $pages)
+{
+    $a = [1, $pages, $curr - 2, $curr - 1, $curr, $curr + 1, $curr + 2];
+    $a = array_filter($a, fn($p) => $p >= 1 && $p <= $pages);
+    $a = array_unique($a);
+    sort($a);
+    $out = [];
+    $prev = 0;
+    foreach ($a as $p) {
+        if ($prev && $p - $prev > 1) $out[] = '…';
+        $out[] = $p;
+        $prev = $p;
+    }
     return $out;
 }
-$pageLinks=buildPages($page,$pages);
+$pageLinks = buildPages($page, $pages);
 ?>
 <h2>My Parcels</h2>
 
 <!-- Top toolbar: page‑size left, action buttons right -->
-<div class="table-toolbar flex" style="align-items:center;gap:.5rem;margin-bottom:.5rem">
-  <form method="get" class="page-size flex" style="gap:.3rem;align-items:center">
-    <?php foreach(['q'=>'parcel/index','sort'=>$sort,'dir'=>strtolower($dir),
-                  'f_name'=>$nameFilter,'f_address'=>$addrFilter,'page'=>$page] as $k=>$v): ?>
-      <input type="hidden" name="<?= $k ?>" value="<?= htmlspecialchars($v) ?>">
-    <?php endforeach ?>
-    Show
-    <select name="limit" onchange="this.form.submit()" style="width:60px;padding:.25rem .3rem">
-      <?php foreach($perPageOpts as $opt): ?>
-        <option value="<?= $opt ?>" <?= $opt==$perPage?'selected':'' ?>><?= $opt ?></option>
-      <?php endforeach ?>
-    </select>
-  </form>
+<div class="table-toolbar flex flex-right" style="align-items:center;gap:.5rem;margin-bottom:.5rem">
+    <form method="get" class="page-size flex" style="gap:.3rem;align-items:center">
+        <?php foreach (
+            [
+                'q' => 'parcel/index',
+                'sort' => $sort,
+                'dir' => strtolower($dir),
+                'f_name' => $nameFilter,
+                'f_address' => $addrFilter,
+                'page' => $page
+            ] as $k => $v
+        ): ?>
+            <input type="hidden" name="<?= $k ?>" value="<?= htmlspecialchars($v) ?>">
+        <?php endforeach ?>
+    </form>
 
-  <div class="flex" style="gap:.4rem" style="gap:.4rem;margin-left:auto">
-    <a class="btn" href="/?q=parcel/add">Add Parcel</a>
-    <a class="btn" href="/?q=parcel/export">Export</a>
-  </div>
+
+    <div class="button-top-set">
+        <a class="btn" href="/?q=parcel/add">Add Parcel</a>
+        <a class="btn" href="/?q=parcel/export">Export</a>
+    </div>
 </div>
 
 <div class="card">
-<table>
-  <thead>
-    <?php
-      $headers=['name'=>'Parcel name','address'=>'Address','blocks'=>'Blocks','status'=>'Status','created_at'=>'Created','actions'=>''];
-      $toggle=$dir==='ASC'?'desc':'asc';
-    ?>
-    <tr>
-      <?php foreach($headers as $k=>$label): ?>
-        <th>
-          <?php if(!in_array($k,['address','blocks','actions'])): ?>
-            <a href="?q=parcel/index&sort=<?= $k ?>&dir=<?= ($sort===$k?$toggle:'asc') ?>&limit=<?= $perPage ?>&f_name=<?= urlencode($nameFilter) ?>&f_address=<?= urlencode($addrFilter) ?>">
-              <?= $label ?> <?= $sort===$k?($dir==='ASC'?'▲':'▼'):'' ?>
-            </a>
-          <?php else: ?><?= $label ?><?php endif ?>
-        </th>
-      <?php endforeach ?>
-    </tr>
-    <tr>
-      <th><input class="tbl-filter" name="f_name" value="<?= htmlspecialchars($nameFilter) ?>" placeholder="Filter…"></th>
-      <th><input class="tbl-filter" name="f_address" value="<?= htmlspecialchars($addrFilter) ?>" placeholder="Filter…"></th>
-      <th></th><th></th><th></th><th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <?php foreach($parcels as $p):
-        $addr=trim($p['street'].' '.$p['city'].' '.$p['state'].' '.$p['zip']); ?>
-      <tr>
-        <td><?= htmlspecialchars($p['name']) ?></td>
-        <td><?= htmlspecialchars($addr) ?></td>
-        <td><?= $counts[$p['id']]??0 ?></td>
-        <td><?= htmlspecialchars($p['status']) ?></td>
-        <td><?= date('Y-m-d',strtotime($p['created_at'])) ?></td>
-        <td>
-          <div class="action-wrap" style="position:relative">
-            <button class="action-btn">⋮</button>
-            <div class="actions-menu">
-              <a href="/?q=parcel/edit&id=<?= $p['id'] ?>">Edit</a>
-              <a href="/?q=block/index&parcel=<?= $p['id'] ?>">Blocks</a>
-              <a href="/?q=parcel/disable&id=<?= $p['id'] ?>">Disable</a>
-            </div>
-          </div>
-        </td>
-      </tr>
-    <?php endforeach ?>
-    <?php if(!$parcels): ?>
-      <tr><td colspan="6" style="text-align:center;padding:1rem">No parcels found.</td></tr>
-    <?php endif ?>
-  </tbody>
-</table>
+    <table>
+        <thead>
+            <?php
+            $headers = ['name' => 'Parcel name', 'address' => 'Address', 'blocks' => 'Blocks', 'status' => 'Status', 'created_at' => 'Created', 'actions' => ''];
+            $toggle = $dir === 'ASC' ? 'desc' : 'asc';
+            ?>
+            <tr>
+                <?php foreach ($headers as $k => $label): ?>
+                    <th>
+                        <?php if (!in_array($k, ['address', 'blocks', 'actions'])): ?>
+                            <a href="?q=parcel/index&sort=<?= $k ?>&dir=<?= ($sort === $k ? $toggle : 'asc') ?>&limit=<?= $perPage ?>&f_name=<?= urlencode($nameFilter) ?>&f_address=<?= urlencode($addrFilter) ?>">
+                                <?= $label ?> <?= $sort === $k ? ($dir === 'ASC' ? '▲' : '▼') : '' ?>
+                            </a>
+                            <?php else: ?><?= $label ?><?php endif ?>
+                    </th>
+                <?php endforeach ?>
+            </tr>
+            <tr>
+                <th><input class="tbl-filter" name="f_name" value="<?= htmlspecialchars($nameFilter) ?>" placeholder="Filter…"></th>
+                <th><input class="tbl-filter" name="f_address" value="<?= htmlspecialchars($addrFilter) ?>" placeholder="Filter…"></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($parcels as $p):
+                $addr = trim($p['street'] . ' ' . $p['city'] . ' ' . $p['state'] . ' ' . $p['zip']); ?>
+                <tr>
+                    <td><?= htmlspecialchars($p['name']) ?></td>
+                    <td><?= htmlspecialchars($addr) ?></td>
+                    <td><?= $counts[$p['id']] ?? 0 ?></td>
+                    <td><?= htmlspecialchars($p['status']) ?></td>
+                    <td><?= date('Y-m-d', strtotime($p['created_at'])) ?></td>
+                    <td>
+                        <div class="action-wrap" style="position:relative">
+                            <button class="action-btn">⋮</button>
+                            <div class="actions-menu">
+                                <a href="/?q=parcel/edit&id=<?= $p['id'] ?>">Edit</a>
+                                <a href="/?q=block/index&parcel=<?= $p['id'] ?>">Blocks</a>
+                                <a href="/?q=parcel/disable&id=<?= $p['id'] ?>">Disable</a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            <?php endforeach ?>
+            <?php if (!$parcels): ?>
+                <tr>
+                    <td colspan="6" style="text-align:center;padding:1rem">No parcels found.</td>
+                </tr>
+            <?php endif ?>
+        </tbody>
+    </table>
 </div>
 
 <!-- Bottom pagination only -->
-<?php if($pages>1): ?>
-  <nav class="pagination flex" style="gap:.3rem;margin-top:.5rem">
-    <?php if($page>1): ?><a class="btn" href="<?= buildUrlPg($page-1) ?>">‹</a><?php endif; ?>
-    <?php foreach($pageLinks as $p): ?>
-      <?php if($p==='…'): ?><span style="padding:.4rem .6rem">…</span>
-      <?php else: ?><a class="btn<?= $p==$page?' active':'' ?>" href="<?= buildUrlPg($p) ?>"><?= $p ?></a><?php endif; ?>
-    <?php endforeach ?>
-    <?php if($page<$pages): ?><a class="btn" href="<?= buildUrlPg($page+1) ?>">›</a><?php endif; ?>
-  </nav>
+<?php if ($pages > 1): ?>
+    <nav class="pagination flex" style="gap:.3rem;margin-top:.5rem">
+        <?php if ($page > 1): ?><a class="btn" href="<?= buildUrlPg($page - 1) ?>">‹</a><?php endif; ?>
+        <?php foreach ($pageLinks as $p): ?>
+            <?php if ($p === '…'): ?><span style="padding:.4rem .6rem">…</span>
+            <?php else: ?><a class="btn<?= $p == $page ? ' active' : '' ?>" href="<?= buildUrlPg($p) ?>"><?= $p ?></a><?php endif; ?>
+        <?php endforeach ?>
+        <?php if ($page < $pages): ?><a class="btn" href="<?= buildUrlPg($page + 1) ?>">›</a><?php endif; ?>
+    </nav>
 <?php endif; ?>
 
 <script src="/js/parcel-actions.js"></script>
 <script>
-document.querySelectorAll('.tbl-filter').forEach(i=>{
-  i.addEventListener('keypress',e=>{
-    if(e.key==='Enter'){
-      const u=new URL(location.href);
-      u.searchParams.set('f_name',document.querySelector('[name="f_name"]').value);
-      u.searchParams.set('f_address',document.querySelector('[name="f_address"]').value);
-      u.searchParams.set('page',1);
-      u.searchParams.set('limit',<?= $perPage ?>);
-      location.href=u;
-    }
-  });
-});
+    document.querySelectorAll('.tbl-filter').forEach(i => {
+        i.addEventListener('keypress', e => {
+            if (e.key === 'Enter') {
+                const u = new URL(location.href);
+                u.searchParams.set('f_name', document.querySelector('[name="f_name"]').value);
+                u.searchParams.set('f_address', document.querySelector('[name="f_address"]').value);
+                u.searchParams.set('page', 1);
+                u.searchParams.set('limit', <?= $perPage ?>);
+                location.href = u;
+            }
+        });
+    });
 </script>

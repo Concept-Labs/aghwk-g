@@ -42,6 +42,7 @@ class ParcelController extends Controller
 
         $total = $model->countWhere($where, $params);
         $perPage = max(1,$perPage); // safeguard
+$perPage = 10; //hardcode for now
         $pages = max(1, (int)ceil($total / $perPage));
         if ($page > $pages) $page = $pages;
         $offset = ($page - 1) * $perPage;
