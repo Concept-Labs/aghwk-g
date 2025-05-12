@@ -100,8 +100,13 @@ $pageLinks = buildPages($page, $pages);
                             <div class="actions-menu">
                                 <a href="/?q=parcel/edit&id=<?= $p['id'] ?>">Edit</a>
                                 <a href="/?q=block/index&parcel=<?= $p['id'] ?>">Blocks</a>
-                                <a href="/?q=parcel/disable&id=<?= $p['id'] ?>">Disable</a>
+                                <a href="/?q=serviceRequest/request&parcel=<?= $p['id'] ?>">Request Service</a>
+                                <a href="#" onclick="alert('Coming soon')">Self Tracking</a>
+                                <div class="sep"></div>
+                                <a href="/?q=block/disableAll&parcel=<?= $p['id'] ?>" class="warning">Disable All Blocks</a>
+                                <a href="/?q=parcel/remove&id=<?= $p['id'] ?>" class="danger">Remove</a>
                             </div>
+
                         </div>
                     </td>
                 </tr>
@@ -145,14 +150,14 @@ $pageLinks = buildPages($page, $pages);
 
 <link rel="stylesheet" href="/public/css/blocks-modal.css">
 <div id="blocksModal">
-  <div class="modal-card">
-    <button class="close">×</button>
-    <h3 class="modal-title"></h3>
-    <div class="modal-body"></div>
-    <div class="modal-footer">
-      <a class="btn full-link" href="#" target="_blank">Blocks list</a>
-      <button class="btn close">Close</button>
+    <div class="modal-card">
+        <button class="close">×</button>
+        <h3 class="modal-title"></h3>
+        <div class="modal-body"></div>
+        <div class="modal-footer">
+            <a class="btn full-link" href="#" target="_blank">Blocks list</a>
+            <button class="btn close">Close</button>
+        </div>
     </div>
-  </div>
 </div>
 <script src="/public/js/blocks-modal.js"></script>

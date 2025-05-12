@@ -2,13 +2,20 @@
  --bg:#f9f9fb;
  --text:#111;
  --accent:#0077ff;
+ --accent-hover:#005dcc;
  --card:#fff;
  --shadow:0 2px 6px rgba(0,0,0,.1);
  --radius:8px;
  --spacing:1rem;
  --btn-size:20px;
 }
-body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.4}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.4;
+  background: var(--bg) url('/public/img/bg-main.png') 50% 50% no-repeat;}
+main{
+  opacity: 0.9;
+  min-height:calc(100vh - 120px);
+  transition:background-position .3s ease;
+}
 .flex{display:flex;}
 .flex-right{justify-content:flex-end;}
 .flex-center{justify-content:center;align-items:center;}
@@ -25,8 +32,8 @@ nav ul{list-style:none;margin:0;padding:0;display:flex;gap:.7rem;align-items:cen
 select,input,textarea{padding:.5rem;border:1px solid #ccc;border-radius:var(--radius);width:100%;box-sizing:border-box}
 .button-set{display:flex;gap:.5rem;border-top:1px solid #ccc;padding-top:10px;}
 .button-top-set{display:flex;gap:.5rem;padding-bottom:10px;}
-button,.btn{padding:.6rem 1.2rem;border:none;border-radius:var(--radius);background:var(--accent);color:var(--text);cursor:pointer;box-shadow:var(--shadow);transition:background .2s}
-button:hover,.btn:hover{background:#005dcc}
+button,.btn{padding:.6rem 1.2rem;border:none;border-radius:var(--radius);background:var(--accent);color:var(--accent-text);cursor:pointer;box-shadow:var(--shadow);transition:background .2s}
+button:hover,.btn:hover{background:var(--accent)}
 .card{background:var(--card);padding:var(--spacing);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:var(--spacing)}
 table{width:100%;border-collapse:collapse}
 th,td{padding:.6rem;text-align:left}
@@ -91,12 +98,17 @@ tr:hover .action-btn{
   opacity:1;
   pointer-events:auto;
 }
-.actions-menu{display:none;position:absolute;right:0;top:24px;background:var(--card);box-shadow:var(--shadow);border-radius:var(--radius);overflow:hidden;min-width:120px}
+.actions-menu{display:none;position:absolute;right:0;top:24px;background:var(--card);box-shadow:var(--shadow);border-radius:var(--radius);overflow:hidden;min-width:220px}
 .actions-menu.show{display:block}
 .actions-menu a{display:block;padding:.5rem 1rem;color:var(--text);text-decoration:none}
 .actions-menu a:hover{background:var(--accent); color:var(--text)}
 
 .actions-menu{z-index:1000}
+.actions-menu .sep{height:1px;background:rgba(0,0,0,.1);margin:.3rem 0;}
+.actions-menu a.danger{color:#c62828}
+.actions-menu a.warning{color:#e65100}
+.actions-menu a:hover.danger{background:rgba(198,40,40,.1)}
+.actions-menu a:hover.warning{background:rgba(230,81,0,.1)}
 
 .table-toolbar select{min-width:auto}
 
@@ -105,13 +117,30 @@ tr:hover .action-btn{
 .theme-btn{border:none !important}
 
 /* Theme classes override root vars */
-.theme-light{--bg:#f9f9fb;--text:#111;--accent:#0077ff;--card:#fff;}
-.theme-dark{--bg:#202124;--text:#e8eaed;--accent:#8ab4f8;--card:#2d2f31;}
-.theme-turquoise{--bg:#e0ffff;--text:#054;--accent:#008b8b;--card:#ffffff;}
-.theme-purple{--bg:#f4ecff;--text:#3d246b;--accent:#8e44ad;--card:#ffffff;}
-.theme-green{--bg:#e9ffe6;--text:#064f20;--accent:#27ae60;--card:#ffffff;}
-.theme-blue{--bg:#eef4ff;--text:#002e6d;--accent:#2878ff;--card:#ffffff;}
-.theme-red{--bg:#ffeaea;--text:#640000;--accent:#e74c3c;--card:#ffffff;}
+.theme-light{--bg:#f9f9fb;--text:#111;--accent:#0077ff;--card:#fff;
+  --accent-text:#fff;
+  --shadow:0 2px 6px rgba(0,0,0,.12);
+}
+.theme-dark{--bg:#202124;--text:#e8eaed;--accent:#8ab4f8;--card:#2d2f31;
+  --accent-text:#fff;
+  --shadow:0 2px 6px rgba(0,0,0,.70);
+}
+.theme-turquoise{--bg:#e0ffff;--text:#054;
+  --accent:#008b8b;
+  --accent-text:#fff;
+  --card:#ffffff;}
+.theme-purple{--bg:#f4ecff;--text:#3d246b;--accent:#8e44ad;--card:#ffffff;
+  --accent-text:#fff;
+}
+.theme-green{--bg:#e9ffe6;--text:#064f20;--accent:#27ae60;--card:#ffffff;
+  --accent-text:#fff;
+}
+.theme-blue{--bg:#eef4ff;--text:#002e6d;--accent:#2878ff;--card:#ffffff;
+  --accent-text:#fff;
+}
+.theme-red{--bg:#ffeaea;--text:#640000;--accent:#e74c3c;--card:#ffffff;
+  --accent-text:#fff;
+}
 
 /* === Theme-specific shadows === */
 .theme-light     { --shadow: 0 2px 6px rgba(0,0,0,.12); }
