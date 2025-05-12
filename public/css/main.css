@@ -1,5 +1,7 @@
 :root{
  --bg:#f9f9fb;
+ --header--bg:#fff;
+ --header--text:#111;
  --text:#111;
  --accent:#0077ff;
  --accent-hover:#005dcc;
@@ -16,12 +18,27 @@ main{
   min-height:calc(100vh - 120px);
   transition:background-position .3s ease;
 }
+
 .flex{display:flex;}
 .flex-right{justify-content:flex-end;}
 .flex-center{justify-content:center;align-items:center;}
 a{color:var(--accent);text-decoration:none}
-header.flex,footer.flex{display:flex;align-items:center;justify-content:space-between;padding:var(--spacing);background:var(--card);box-shadow:var(--shadow);position:sticky;top:0;z-index:100}
+header,
+footer{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:var(--spacing);
+  box-shadow:var(--shadow);
+  position:sticky;
+  top:0;
+  z-index:100
+}
+header{
+  background:var(--header-bg);
+}
 .logo{font-weight:700;font-size:1.2rem}
+.logo img{max-height:72px;vertical-align:middle;margin-right:.5rem}
 nav a{margin:0 .5rem}
 nav ul{list-style:none;margin:0;padding:0;display:flex;gap:.7rem;align-items:center}
 .dropdown{position:relative}
@@ -125,7 +142,10 @@ tr:hover .action-btn{
   --accent-text:#fff;
   --shadow:0 2px 6px rgba(0,0,0,.70);
 }
-.theme-turquoise{--bg:#e0ffff;--text:#054;
+.theme-turquoise{
+  --header-bg:#008b8b;
+  --bg:#e0ffff;
+  --text:#054;
   --accent:#008b8b;
   --accent-text:#fff;
   --card:#ffffff;}
