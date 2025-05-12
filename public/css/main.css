@@ -51,7 +51,7 @@ footer .social a{margin:0 .2rem}
 /* === Floating labels === */
 .fld{position:relative;margin-bottom:1rem}
 .fld input,.fld textarea,.fld select{padding:1rem .5rem .5rem .5rem;width:100%;border:1px solid #ccc;border-radius:var(--radius);background:var(--card)}
-.fld label{position:absolute;left:.75rem;top:0.6rem;color:#666;font-size:.9rem;pointer-events:none;
+.fld label{position:absolute;left:.75rem;top:1rem;color:#666;font-size:.9rem;pointer-events:none;
            background:transparent;transition:all .2s ease}
 .fld input:focus + label,
 .fld input:not(:placeholder-shown) + label,
@@ -76,11 +76,20 @@ footer .social a{margin:0 .2rem}
 
 .pagination .active{background:#005dcc}
 
-.action-btn{background:none;border:none;font-size:18px;cursor:pointer}
+.action-btn{
+  background:none;border:none;font-size:18px;cursor:pointer;
+  opacity:0;
+  pointer-events:none;   /* не клікабельна, коли прихована */
+  transition:opacity .15s ease;
+}
+tr:hover .action-btn{
+  opacity:1;
+  pointer-events:auto;
+}
 .actions-menu{display:none;position:absolute;right:0;top:24px;background:var(--card);box-shadow:var(--shadow);border-radius:var(--radius);overflow:hidden;min-width:120px}
 .actions-menu.show{display:block}
 .actions-menu a{display:block;padding:.5rem 1rem;color:var(--text);text-decoration:none}
-.actions-menu a:hover{background:rgba(0,0,0,.05)}
+.actions-menu a:hover{background:var(--accent); color:var(--text)}
 
 .actions-menu{z-index:1000}
 
@@ -141,3 +150,5 @@ footer .social a{margin:0 .2rem}
 }
 
 footer img{filter:brightness(.2);transition:filter .2s ease}footer a:hover img{filter:brightness(.6)}
+
+.pagination span{color:#777}
