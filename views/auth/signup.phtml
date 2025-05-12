@@ -1,0 +1,46 @@
+
+<h2>Sign Up</h2>
+<?php if ($error): ?><p style="color:red"><?= htmlspecialchars($error) ?></p><?php endif; ?>
+<div class="card">
+<form method="post">
+  <div class="fld"><input type="email" name="email" placeholder=" " required><label>Email</label></div>
+  <div class="fld"><input type="password" name="password" placeholder=" " required><label>Password</label></div>
+  <div class="fld"><input type="password" name="password_repeat" placeholder=" " required><label>Repeat Password</label></div>
+  <div class="fld"><input name="name" placeholder=" " required><label>Business name</label></div>
+
+  <div class="fld">
+    <select name="acreage_size" required>
+      <option value="" selected disabled hidden></option>
+      <option>Under 50</option><option>50-200</option>
+      <option>200-500</option><option>Above 500</option>
+    </select>
+    <label>Total Approximate Acreage</label>
+  </div>
+
+  <fieldset class="card">
+    <legend>Primary Address</legend>
+    <div class="fld"><input name="street" placeholder=" "><label>Street</label></div>
+    <div class="fld"><input name="city" placeholder=" "><label>City</label></div>
+    <div class="fld"><input name="state" placeholder=" "><label>State</label></div>
+    <div class="fld"><input name="zip" placeholder=" "><label>ZIP</label></div>
+  </fieldset>
+
+  <label><input type="checkbox" id="same" checked> Billing address is the same</label>
+
+  <fieldset id="billing" class="card">
+    <legend>Billing Address</legend>
+    <div class="fld"><input name="billing_street" placeholder=" "><label>Billing street</label></div>
+    <div class="fld"><input name="billing_city" placeholder=" "><label>Billing city</label></div>
+    <div class="fld"><input name="billing_state" placeholder=" "><label>Billing state</label></div>
+    <div class="fld"><input name="billing_zip" placeholder=" "><label>Billing ZIP</label></div>
+  </fieldset>
+
+  <button class="btn" type="submit">Register</button>
+</form>
+</div>
+<script>
+document.getElementById('billing').style.display='none';
+document.getElementById('same').addEventListener('change',e=>{
+  document.getElementById('billing').style.display=e.target.checked?'none':'block';
+});
+</script>

@@ -1,0 +1,16 @@
+
+<h2>Login</h2>
+<?php if ($error): ?><p style="color:red"><?= htmlspecialchars($error) ?></p><?php endif; ?>
+<div class="card">
+<form method="post">
+  <div class="fld">
+    <input type="email" name="email" placeholder=" " required>
+    <label>Email</label>
+  </div>
+  <div class="fld">
+    <input type="password" name="password" placeholder=" " required>
+    <label>Password</label>
+  </div>
+  <button class="btn" type="submit">Login</button>
+</form>
+</div>

@@ -1,0 +1,34 @@
+<h2>Add Parcel</h2>
+<div class="card">
+<form method="post">
+<div class="fld"><input name="name" placeholder=" " required><label>Name</label></div>
+<div class="fld"><input name="street" placeholder=" "><label>Street</label></div>
+<div class="fld"><input name="city" placeholder=" "><label>City</label></div>
+<div class="fld"><input name="state" placeholder=" "><label>State</label></div>
+<div class="fld"><input name="zip" placeholder=" "><label>ZIP</label></div>
+<div class="fld">
+  <select name="status" required><option value="" hidden></option><option>active</option><option>inactive</option></select>
+  <label>Status</label>
+</div>
+<div class="fld"><textarea name="notes" placeholder=" " rows="3"></textarea><label>Notes</label></div>
+
+<h3>Blocks</h3>
+<div id="blocks"></div>
+<button class="btn" type="button" onclick="addBlock()">Add Block</button><br><br>
+<button class="btn" type="submit">Create Parcel</button>
+</form>
+</div>
+<script>
+let idx=0;
+function addBlock(){
+  const d=document.createElement('div');d.className='card';
+  d.innerHTML=`
+    <div class="fld"><input name="blocks[\${idx}][name]" placeholder=" " required><label>Block Name</label></div>
+    <div class="fld"><input name="blocks[\${idx}][crop_category]" placeholder=" "><label>Usage Type</label></div>
+    <div class="fld"><input type="number" step="0.01" name="blocks[\${idx}][acres]" placeholder=" "><label>Acres</label></div>
+    <div class="fld"><textarea name="blocks[\${idx}][notes]" placeholder=" " rows="2"></textarea><label>Notes</label></div>
+  `;
+  document.getElementById('blocks').appendChild(d);
+  idx++;
+}
+</script>

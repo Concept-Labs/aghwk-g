@@ -1,0 +1,105 @@
+<h2>My Parcels</h2>
+
+<!-- Top‑right toolbar -->
+<div class="table-toolbar" style="display:flex;justify-content:flex-end;gap:.4rem;margin-bottom:.5rem">
+  <a class="btn" href="/?q=parcel/add">Add Parcel</a>
+  <a class="btn" href="/?q=parcel/export">Export</a>
+</div>
+
+<div class="card">
+<table>
+  <thead>
+    <?php
+      $headers = ['name'=>'Parcel name','address'=>'Address','blocks'=>'Blocks','status'=>'Status','created_at'=>'Created','actions'=>''];
+      $toggleDir = $dir==='ASC'?'desc':'asc';
+    ?>
+    <tr>
+      <?php foreach($headers as $k=>$label): ?>
+        <th>
+          <?php if(in_array($k,['actions','blocks','address'])): ?>
+            <?= $label ?>
+          <?php else: ?>
+            <a href="?q=parcel/index&sort=<?= $k ?>&dir=<?= ($sort===$k?$toggleDir:'asc') ?>&limit=<?= $perPage ?>&f_name=<?= urlencode($nameFilter) ?>&f_address=<?= urlencode($addrFilter) ?>">
+              <?= $label ?> <?= $sort===$k ? ($dir==='ASC'?'▲':'▼') : '' ?>
+            </a>
+          <?php endif; ?>
+        </th>
+      <?php endforeach ?>
+    </tr>
+    <!-- filter row -->
+    <tr>
+      <th><input class="tbl-filter" name="f_name" value="<?= htmlspecialchars($nameFilter) ?>" placeholder="Filter…"></th>
+      <th><input class="tbl-filter" name="f_address" value="<?= htmlspecialchars($addrFilter) ?>" placeholder="Filter…"></th>
+      <th></th><th></th><th></th><th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <?php foreach($parcels as $p): ?>
+      <?php $addr = trim($p['street'].' '.$p['city'].' '.$p['state'].' '.$p['zip']); ?>
+      <tr>
+        <td><?= htmlspecialchars($p['name']) ?></td>
+        <td><?= htmlspecialchars($addr) ?></td>
+        <td><?= $counts[$p['id']] ?? 0 ?></td>
+        <td><?= htmlspecialchars($p['status']) ?></td>
+        <td><?= date('Y-m-d', strtotime($p['created_at'])) ?></td>
+        <td>
+          <div class="action-wrap" style="position:relative">
+            <button class="action-btn" data-id="<?= $p['id'] ?>">⋮</button>
+            <div class="actions-menu">
+              <a href="/?q=parcel/edit&id=<?= $p['id'] ?>">Edit</a>
+              <a href="/?q=block/index&parcel=<?= $p['id'] ?>">Blocks</a>
+              <a href="/?q=parcel/disable&id=<?= $p['id'] ?>">Disable</a>
+            </div>
+          </div>
+        </td>
+      </tr>
+    <?php endforeach ?>
+    <?php if(!$parcels): ?>
+      <tr><td colspan="6" style="text-align:center;padding:1rem">No parcels found.</td></tr>
+    <?php endif ?>
+  </tbody>
+</table>
+</div>
+
+<!-- Bottom area: pagination left, page size right -->
+<div class="flex" style="justify-content:space-between;align-items:center;margin-top:.5rem">
+  <?php if ($pages > 1): ?>
+    <nav class="pagination flex" style="gap:.4rem">
+      <?php for($i=1;$i<=$pages;$i++): ?>
+        <a class="btn<?= $i==$page?' active':'' ?>" href="?q=parcel/index&page=<?= $i ?>&limit=<?= $perPage ?>&sort=<?= $sort ?>&dir=<?= strtolower($dir) ?>&f_name=<?= urlencode($nameFilter) ?>&f_address=<?= urlencode($addrFilter) ?>">
+          <?= $i ?>
+        </a>
+      <?php endfor ?>
+    </nav>
+  <?php endif ?>
+
+  <form method="get" class="page-size flex" style="gap:.3rem;align-items:center">
+    <input type="hidden" name="q" value="parcel/index">
+    <input type="hidden" name="sort" value="<?= $sort ?>">
+    <input type="hidden" name="dir" value="<?= strtolower($dir) ?>">
+    <input type="hidden" name="f_name" value="<?= htmlspecialchars($nameFilter) ?>">
+    <input type="hidden" name="f_address" value="<?= htmlspecialchars($addrFilter) ?>">
+    Show
+    <select name="limit" onchange="this.form.submit()">
+      <?php foreach ($perPageOpts as $opt): ?>
+        <option value="<?= $opt ?>" <?= $opt==$perPage?'selected':'' ?>><?= $opt ?></option>
+      <?php endforeach ?>
+    </select>
+  </form>
+</div>
+
+<script src="/js/parcel-actions.js"></script>
+<script>
+document.querySelectorAll('.tbl-filter').forEach(inp=>{
+  inp.addEventListener('keypress',e=>{
+    if(e.key==='Enter'){
+      const url=new URL(window.location.href);
+      url.searchParams.set('f_name',document.querySelector('[name="f_name"]').value);
+      url.searchParams.set('f_address',document.querySelector('[name="f_address"]').value);
+      url.searchParams.set('page',1);
+      url.searchParams.set('limit',<?= $perPage ?>);
+      window.location.href=url.toString();
+    }
+  });
+});
+</script>

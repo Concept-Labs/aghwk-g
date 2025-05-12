@@ -1,0 +1,13 @@
+<h2>My Profile</h2>
+<div class="card">
+<form method="post">
+<div class="fld"><input name="name" value="<?= htmlspecialchars($user['name']) ?>" placeholder=" "><label>Name</label></div>
+<div class="fld"><input name="street" value="<?= htmlspecialchars($user['street']) ?>" placeholder=" "><label>Street</label></div>
+<div class="fld"><input name="city" value="<?= htmlspecialchars($user['city']) ?>" placeholder=" "><label>City</label></div>
+<div class="fld"><input name="state" value="<?= htmlspecialchars($user['state']) ?>" placeholder=" "><label>State</label></div>
+<div class="fld"><input name="zip" value="<?= htmlspecialchars($user['zip']) ?>" placeholder=" "><label>ZIP</label></div>
+<div class="fld"><input name="phone" value="<?= htmlspecialchars($user['phone']) ?>" placeholder=" "><label>Phone</label></div>
+<div class="fld"><input type="password" name="password" placeholder=" "><label>New password</label></div>
+<button class="btn" type="submit">Update</button>
+</form>
+</div>
